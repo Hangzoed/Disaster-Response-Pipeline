@@ -27,8 +27,10 @@ def load_data(database_filepath):
     # load daata from database
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql("SELECT * FROM Disaster_cleaned", engine)
+    
+    
+    # Drop uneeded columns and missing values
     df = df.dropna()
-
     X = df["message"]
     Y = df.drop("message",1)
     Y = Y.drop("id",1)
@@ -42,10 +44,11 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-    
+    # Intialize tokenizer and lemmatizer
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
-
+    
+    # A loop to lemmatize lower strip and append the text
     clean_tokens = []
     for tok in tokens:
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
@@ -53,39 +56,15 @@ def tokenize(text):
 
     return clean_tokens
     pass
-def avg_accuracy_score(y_true, y_pred):
-    """
-        Assumes that the numpy arrays `y_true` and `y_pred` ararys 
-        are of the same shape and returns the average of the 
-        accuracy score computed columnwise. 
 
-        y_true - Numpy array - An (m x n) matrix 
-        y_pred - Numpy array - An (m x n) matrix 
 
-        avg_accuracy - Numpy float64 object - Average of accuracy score
-        """
-
-    # initialise an empty list
-    accuracy_results = []
-
-    # for each column index in either y_true or y_pred
-    for idx in range(y_true.shape[-1]):
-        # Get the accuracy score of the idx-th column of y_true and y_pred
-        accuracy = accuracy_score(y_true[:,idx], y_pred[:,idx])
-
-        # Update accuracy_results with accuracy
-        accuracy_results.append(accuracy)
-
-        # Take the mean of accuracy_results
-        avg_accuracy = np.mean(accuracy_results)
-
-        return avg_accuracy
 
 
 
 def build_model():
     
-    #Build the Pipeline
+    
+    #initialize the pipeline
     pipeline = Pipeline([
     ('vect', CountVectorizer(tokenizer=tokenize)),
     ('tfidf', TfidfTransformer()),
@@ -94,43 +73,16 @@ def build_model():
     
     
     
-    def avg_accuracy_score(y_true, y_pred):
-        """
-        Assumes that the numpy arrays `y_true` and `y_pred` ararys 
-        are of the same shape and returns the average of the 
-        accuracy score computed columnwise. 
-
-        y_true - Numpy array - An (m x n) matrix 
-        y_pred - Numpy array - An (m x n) matrix 
-
-        avg_accuracy - Numpy float64 object - Average of accuracy score
-        """
-
-        # initialise an empty list
-        accuracy_results = []
-
-        # for each column index in either y_true or y_pred
-        for idx in range(y_true.shape[-1]):
-            # Get the accuracy score of the idx-th column of y_true and y_pred
-            accuracy = accuracy_score(y_true[:,idx], y_pred[:,idx])
-
-            # Update accuracy_results with accuracy
-            accuracy_results.append(accuracy)
-
-        # Take the mean of accuracy_results
-        avg_accuracy = np.mean(accuracy_results)
-
-        return avg_accuracy
-    
+    # initialize the parameters
     parameters = [
     {
         #'clf__estimator__max_leaf_nodes': [50, 100, 200],
         #'clf__estimator__min_samples_split': [2, 3, 4],
     }
 ]
-
+    # build the model with grid search
     cv = GridSearchCV(pipeline, param_grid=parameters,
-                 scoring=avg_accuracy_score, 
+                 #scoring=average_accuracy_score, 
                 verbose=10, 
                 return_train_score=True 
                  )
@@ -139,6 +91,15 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    INPUT:
+        model- The model to evaluate 
+        X_test -  The data 
+        Y_test -  Labels
+        category_names 
+    OUTPUT: 
+        NONE
+    """
     metrics_list_all=[]
     for col in range(y_test.shape[1]):
         
@@ -159,6 +120,13 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """
+    INPUT:
+        model 
+        model_filepath - Where will the model will be saved
+    OUTPUT: 
+        NONE
+    """    
     filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
     pass
@@ -170,6 +138,8 @@ def main():
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        
+        
         
         print('Building model...')
         model = build_model()
