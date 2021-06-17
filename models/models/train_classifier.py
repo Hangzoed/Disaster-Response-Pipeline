@@ -76,8 +76,8 @@ def build_model():
     # initialize the parameters
     parameters = [
     {
-        #'clf__estimator__max_leaf_nodes': [50, 100, 200],
-        #'clf__estimator__min_samples_split': [2, 3, 4],
+        'clf__estimator__max_leaf_nodes': [50, 100, 200],
+        'clf__estimator__min_samples_split': [2, 3, 4],
     }
 ]
     # build the model with grid search
