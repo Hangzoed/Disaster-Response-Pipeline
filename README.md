@@ -51,12 +51,6 @@ The goal of this project is to build site that can classify disaster messages an
 
 
 
-<!-- GETTING STARTED -->
-## Getting Started
-
-
-
-
 ### Prerequisites
 
 
@@ -104,8 +98,6 @@ Project Link: [https://github.com/Hangzoed/Disaster-Response-Pipeline](https://g
 * [Thanks for Firgure 8 for the Dataset](https://www.figure-eight.com/)
 * [Thanks for Udacity Data Science program for providing initial file structure page layout and amazing mentors](https://www.udacity.com/course/data-scientist-nanodegree--nd025)
 * [I learned alot from  sarasun97](https://github.com/sarasun97)
-* [I learned alot from alirezakfz ](https://github.com/alirezakfz)
-* [I learned a lot from evansdoe/](https://github.com/evansdoe/disaster-response-pipeline)
 * [README template from othneildrewl It helped me to accelrate the README](https://github.com/othneildrew/Best-README-Template)
 
 
