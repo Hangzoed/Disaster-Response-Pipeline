@@ -73,7 +73,7 @@ def build_model():
     
     
     
-    # initialize the parameters
+     #initialize the parameters
     parameters = [
     {
         'clf__estimator__max_leaf_nodes': [50, 100, 200],
@@ -81,12 +81,11 @@ def build_model():
     }
 ]
     # build the model with grid search
-    cv = GridSearchCV(pipeline, param_grid=parameters,
-                 #scoring=average_accuracy_score, 
+    cv = GridSearchCV(pipeline, param_grid=parameters, 
                 verbose=10, 
                 return_train_score=True 
                  )
-    return cv
+    return pipeline
     pass
 
 
@@ -100,17 +99,13 @@ def evaluate_model(model, X_test, Y_test, category_names):
     OUTPUT: 
         NONE
     """
-    metrics_list_all=[]
-    for col in range(y_test.shape[1]):
-        
-        accuracy = accuracy_score(y_test.iloc[:,col], y_pred[:,col])
-        precision=precision_score(y_test.iloc[:,col], y_pred[:,col],average='micro')
-        recall = recall_score(y_test.iloc[:,col], y_pred[:,col],average='micro')
-        f_1 = f1_score(y_test.iloc[:,col], y_pred[:,col],average='micro')
-        metrics_list=[accuracy,precision,recall,f_1]
-        metrics_list_all.append(metrics_list)
-        metrics_df=pd.DataFrame(metrics_list_all,index=category_names,columns=["Accuracy","Precision","Recall","F_1"])
-        print(metrics_df)
+    y_pred = model.predict(X_test)
+
+    x=0
+    for column in Y_test.columns:
+        print(column)
+        print(classification_report(Y_test[column], y_pred[:,x]))
+        x=x+1
 
 
     
