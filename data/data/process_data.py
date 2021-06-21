@@ -27,14 +27,21 @@ def clean_data(df):
     OUTPUT:
          df - Panda DataFrame - A Cleaned Panda Data frame
     """
-    
+    #split categories into a data frame and take the first row
     cat = df.categories.str.split(';', expand=True)
     row = cat.iloc[0]
 
     rew=row.unique()
+    
+   # Fix columns name
+    f = []
+    for x in rew:
+        r = x[:-2]
+        f.append(r)
+        
 
-    rew= [x[:-2] for x in rew]
-    category_colnames = pd.Series(rew)
+    
+    category_colnames = pd.Series(f)
     cat.columns = category_colnames
     for column in cat:
         cat[column] = cat[column].str.strip().str[-1]
@@ -43,7 +50,7 @@ def clean_data(df):
         cat[column] = cat[column].astype('int64')
     
     
-    
+    # concating the categories column with df and dropping unnesscary values
     df = df.drop(['categories'], axis = 1)
 
     df = pd.concat([df, cat], axis=1 )
