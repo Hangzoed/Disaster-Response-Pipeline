@@ -10,6 +10,7 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
+import  pickle
 
 
 app = Flask(__name__)
@@ -43,6 +44,8 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    Categories  = df.iloc[:,4:40].columns
+    Categories_count = df.iloc[:,4:40].sum().values
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -61,6 +64,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        }
+        {
+            'data': [
+                Bar(
+                    x=Categories,
+                    y=Categories_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Messages Catogries',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Catogries"
                 }
             }
         }
