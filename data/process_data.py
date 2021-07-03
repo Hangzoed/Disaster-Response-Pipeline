@@ -56,8 +56,6 @@ def clean_data(df):
     df = pd.concat([df, cat], axis=1 )
     
     
-    df = df.drop('related',1 )
-    
     df = df.drop_duplicates()
     
     df.dropna(how='any')
