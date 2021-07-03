@@ -36,7 +36,10 @@ def load_data(database_filepath):
     Y = Y.drop("id",1)
     Y = Y.drop("genre",1)
     Y = Y.drop("original",1)
-    category_names = Y.columns
+    fix_binary = lambda x: 1 if x == 2 else x
+    df.related.apply(fix_binary)
+    
+    category_names = Y.columns 
     
     return X,Y,category_names
 
